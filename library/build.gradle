@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.1"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation "com.squareup.retrofit2:retrofit-mock:$versions.retrofit"
+    testImplementation 'junit:junit:4.13'
+    testImplementation "io.mockk:mockk:1.10.0"
+    testImplementation 'com.google.truth:truth:1.0.1'
+    testImplementation "org.koin:koin-test:$versions.koin_version"
+    testImplementation "com.squareup.retrofit2:retrofit-mock:$versions.retrofit"
+    testImplementation "com.squareup.retrofit2:converter-moshi:$versions.retrofit"
+    testImplementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
+}
