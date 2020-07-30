@@ -3,7 +3,6 @@ package com.cocosw.optimus
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
-import kotlin.reflect.KFunction1
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
@@ -20,7 +19,7 @@ class InMemoryMockResponseSupplier : MockResponseSupplier {
         return field.call(cls.java.newInstance()) as Response<*>
     }
 
-    private fun findDefaultField(cls: KClass<out MockResponse>): KProperty1<out MockResponse, Any?>? {
+    private fun findDefaultField(cls: KClass<out MockResponse>): KProperty1<out MockResponse, *>? {
         return cls.declaredMemberProperties.firstOrNull {
             it.findAnnotation<Default>() != null
         }

@@ -11,19 +11,19 @@ interface Api {
     fun getUsers(): Single<List<User>>
 
     @GET("api/user?page=2")
-    fun getUser(id: Int):Single<User>
+    fun getUser(id: Int): Single<User>
 
     @POST("api/user")
-    fun addUser(id: Int):Single<User>
+    fun addUser(id: Int): Single<User>
 
     @PUT("api/user")
-    fun editUser(id: Int):Single<User>
+    fun editUser(id: Int): Single<User>
 }
 
-class User (
-    val id:Int,
-    val email:String,
-    val first_name:String,
-    val last_name:String,
-    val avatar:String
+class User(
+    val id: Int,
+    val email: String,
+    val first_name: String,
+    val last_name: String,
+    val avatar: String
 )

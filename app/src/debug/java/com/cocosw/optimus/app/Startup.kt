@@ -1,6 +1,5 @@
 package com.cocosw.optimus.app
 
-import com.cocosw.optimus.MockResponseSupplier
 import com.cocosw.optimus.Optimus
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -12,10 +11,11 @@ import retrofit2.mock.MockRetrofit
 
 class Startup {
     fun init(application: App) {
-        startKoin {androidContext(application)
+        startKoin {
+            androidContext(application)
             modules(
-                application.modules()+
-                        debugModule()
+                application.modules() +
+                    debugModule()
             )
             androidLogger()
         }
@@ -23,8 +23,7 @@ class Startup {
 
     fun debugModule(): Module {
         return module {
-            single {provideMockRetrofit(get())}
-            single<MockResponseSupplier> { Mock }
+            single { provideMockRetrofit(get()) }
             single { Optimus.Builder(get()).build() }
             single { provideMockApi(get()) }
         }

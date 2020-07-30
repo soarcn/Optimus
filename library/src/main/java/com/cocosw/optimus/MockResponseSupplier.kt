@@ -9,4 +9,3 @@ interface MockResponseSupplier {
     fun get(cls: KClass<out MockResponse>, method: Method): Response<*>
     fun set(method: KFunction<Any>, value: KProperty1<*, *>)
 }
-

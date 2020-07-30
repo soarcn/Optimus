@@ -1,20 +1,18 @@
 package com.cocosw.optimus
 
-import okhttp3.MediaType
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Method
+import java.lang.reflect.Proxy
+import kotlin.reflect.jvm.javaMethod
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.mock.BehaviorDelegate
 import retrofit2.mock.Calls
 import retrofit2.mock.MockRetrofit
-import java.lang.reflect.InvocationHandler
-import java.lang.reflect.Method
-import java.lang.reflect.Proxy
-import kotlin.reflect.jvm.javaMethod
-
 
 class Optimus(
-    internal val retrofit: MockRetrofit,
+    private val retrofit: MockRetrofit,
     internal val supplier: MockResponseSupplier
 ) {
     internal var converter: Converter = object : Converter {
@@ -27,15 +25,18 @@ class Optimus(
     // Single-interface proxy creation guarded by parameter safety.
     fun <T> create(service: Class<T>): T {
         val original = retrofit.retrofit().create(service)
-        return Proxy.newProxyInstance(service.classLoader,
-            arrayOf<Class<*>>(service),OptimusHandler(this, original,retrofit.create(service),getMockService(service))) as T
+        return Proxy.newProxyInstance(
+            service.classLoader,
+            arrayOf<Class<*>>(service),
+            OptimusHandler(this, original, retrofit.create(service), getMockService(service))
+        ) as T
     }
 
     internal fun getMockService(service: Class<*>): MockService {
         try {
             return response.first { it.clazz == service }
-        } catch (e:NoSuchElementException) {
-            throw IllegalStateException("Can't find "+service.name)
+        } catch (e: NoSuchElementException) {
+            throw IllegalStateException("Can't find " + service.name)
         }
     }
 
@@ -44,7 +45,7 @@ class Optimus(
     class Builder(private val supplier: MockResponseSupplier) {
         private var retrofit: MockRetrofit? = null
         private var response: Array<out MockService> = emptyArray()
-        private var converterFactory: Converter?=null
+        private var converterFactory: Converter? = null
 
         fun response(vararg responses: MockService): Builder {
             this.response = responses
@@ -70,13 +71,12 @@ class Optimus(
             if (retrofit == null) {
                 throw IllegalStateException("retrofit or mockRetrofit are required.")
             } else {
-                val out = Optimus(retrofit!!,supplier)
+                val out = Optimus(retrofit!!, supplier)
                 out.response = response
                 converterFactory?.let { out.converter = it }
                 return out
             }
         }
-
     }
 }
 
@@ -90,26 +90,35 @@ class OptimusHandler<T>(
 
     override fun invoke(obj: Any, method: Method, args: Array<out Any>?): Any? {
         return if (optimus.bypass) {
-            method.invoke(original,args)
+            method.invoke(original, args)
         } else {
-            val define = mockService.definitions.first { method == it.kFunction.javaMethod }
-            val response = optimus.supplier.get(define.kClass,method)
-            val value:Any = response.result?.invoke(DefinitionParameters(args))!!
+            val define = try {
+                mockService.definitions.first { method == it.kFunction.javaMethod }
+            } catch (e: NoSuchElementException) {
+                throw IllegalStateException("can't find definition for method " + method.name)
+            }
+            val response = optimus.supplier.get(define.kClass, method)
+            val value: Any? = response.result?.invoke(DefinitionParameters(args))
             val returning = if (response.code >= 400) {
-                Calls.response(Response.error<T>(response.code, optimus.converter.convert(value)))
+                Calls.response(
+                    Response.error<T>(
+                        response.code,
+                        optimus.converter.convert(value ?: "")
+                    )
+                )
             } else {
                 Calls.response(value)
             }
 
-            if (args==null || args.isEmpty())
+            if (args == null || args.isEmpty())
                 method.invoke(delegate.returning(returning))
             else {
-                method.invoke(delegate.returning(returning),args)
+                method.invoke(delegate.returning(returning), args)
             }
         }
     }
 }
 
 interface Converter {
-    fun convert(obj:Any):ResponseBody
+    fun convert(obj: Any): ResponseBody
 }

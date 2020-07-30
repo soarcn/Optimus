@@ -5,7 +5,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
-class App: Application() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
         Startup().init(this)

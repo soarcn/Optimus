@@ -1,3 +1,3 @@
 package com.cocosw.optimus.app
 
-class ApiError (statusCode:Int,error:String)
+class ApiError(statusCode: Int, error: String)
