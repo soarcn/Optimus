@@ -5,19 +5,25 @@ import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface TestApi {
 
     @GET("/get")
     fun get(): Single<User>
 
-    @GET("/find")
-    fun find(id: Int): Single<User>
+    @GET("/find/{id}")
+    fun find(@Query("id") id: Int): Single<User>
 
     @POST("/post")
     fun post(): Call<List<User>>
 
     fun new(): Completable
+}
+
+interface AnotherApi {
+    @GET("/test")
+    fun test(): Call<User>
 }
 
 class User(

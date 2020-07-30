@@ -3,7 +3,11 @@ package com.cocosw.optimus
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
-abstract class MockService(val clazz: Class<*>, val name: String?) {
+abstract class MockService(
+    val clazz: Class<*>,
+    val name: String
+) {
+
     internal val definitions = arrayListOf<MockDefinition>()
 
     infix fun KFunction<*>.with(kClass: KClass<out MockResponse>): MockDefinition {
@@ -15,7 +19,11 @@ abstract class MockService(val clazz: Class<*>, val name: String?) {
     }
 }
 
-fun <T> alter(clazz: Class<T>, name: String? = null, block: MockService.() -> Unit): MockService {
+inline fun <T> alter(
+    clazz: Class<T>,
+    name: String = clazz.simpleName,
+    block: MockService.() -> Unit
+): MockService {
     return object : MockService(clazz, name) {}.apply(block)
 }
 
@@ -40,11 +48,10 @@ class DefinitionParameters internal constructor(vararg val values: Any?) {
      * return T
      */
     inline fun <reified T> get() = values.first { it is T }
-
 }
 
 class MockDefinition(
     internal val kFunction: KFunction<*>,
     internal val kClass: KClass<out MockResponse>,
-    internal var name: String? = null
+    internal var name: String = kFunction.name
 )

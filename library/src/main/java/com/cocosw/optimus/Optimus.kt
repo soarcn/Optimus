@@ -4,22 +4,17 @@ import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import kotlin.reflect.jvm.javaMethod
-import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.mock.BehaviorDelegate
 import retrofit2.mock.Calls
 import retrofit2.mock.MockRetrofit
 
-class Optimus(
+class Optimus internal constructor(
     private val retrofit: MockRetrofit,
-    internal val supplier: MockResponseSupplier
+    internal val supplier: MockResponseSupplier,
+    internal val converter: Converter
 ) {
-    internal var converter: Converter = object : Converter {
-        override fun convert(obj: Any): ResponseBody {
-            throw NotImplementedError()
-        }
-    }
     internal lateinit var response: Array<out MockService>
 
     // Single-interface proxy creation guarded by parameter safety.
@@ -32,7 +27,7 @@ class Optimus(
         ) as T
     }
 
-    internal fun getMockService(service: Class<*>): MockService {
+    private fun getMockService(service: Class<*>): MockService {
         try {
             return response.first { it.clazz == service }
         } catch (e: NoSuchElementException) {
@@ -45,42 +40,50 @@ class Optimus(
     class Builder(private val supplier: MockResponseSupplier) {
         private var retrofit: MockRetrofit? = null
         private var response: Array<out MockService> = emptyArray()
-        private var converterFactory: Converter? = null
+        private var converter: Converter = Converter.default()
 
-        fun response(vararg responses: MockService): Builder {
+        fun mockGraph(vararg responses: MockService): Builder {
             this.response = responses
             return this
         }
 
         fun mockRetrofit(mockRetrofit: MockRetrofit): Builder {
+            if (retrofit != null) {
+                throw IllegalStateException("redundant retrofit/mock retrofit instance")
+            }
             retrofit = mockRetrofit
             return this
         }
 
         fun retrofit(retrofit: Retrofit): Builder {
+            if (this.retrofit != null) {
+                throw IllegalStateException("redundant retrofit/mock retrofit instance")
+            }
             this.retrofit = MockRetrofit.Builder(retrofit).build()
             return this
         }
 
         fun converter(converterFactory: Converter): Builder {
-            this.converterFactory = converterFactory
+            this.converter = converterFactory
             return this
         }
 
         fun build(): Optimus {
+            if (response.isEmpty()) {
+                throw IllegalStateException("mockGraph is missing.")
+            }
             if (retrofit == null) {
                 throw IllegalStateException("retrofit or mockRetrofit are required.")
             } else {
-                val out = Optimus(retrofit!!, supplier)
+                val out = Optimus(retrofit!!, supplier, converter)
                 out.response = response
-                converterFactory?.let { out.converter = it }
                 return out
             }
         }
     }
 }
 
-class OptimusHandler<T>(
+internal class OptimusHandler<T>(
     private val optimus: Optimus,
     private val original: T,
     private val delegate: BehaviorDelegate<T>,
@@ -90,7 +93,11 @@ class OptimusHandler<T>(
 
     override fun invoke(obj: Any, method: Method, args: Array<out Any>?): Any? {
         return if (optimus.bypass) {
-            method.invoke(original, args)
+            if (args == null || args.isEmpty())
+                method.invoke(original)
+            else {
+                method.invoke(original, *args)
+            }
         } else {
             val define = try {
                 mockService.definitions.first { method == it.kFunction.javaMethod }
@@ -98,7 +105,7 @@ class OptimusHandler<T>(
                 throw IllegalStateException("can't find definition for method " + method.name)
             }
             val response = optimus.supplier.get(define.kClass, method)
-            val value: Any? = if (args!=null) {
+            val value: Any? = if (args != null) {
                 response.result?.invoke(DefinitionParameters(*args))
             } else {
                 response.result?.invoke(DefinitionParameters(args))
@@ -121,8 +128,4 @@ class OptimusHandler<T>(
             }
         }
     }
-}
-
-interface Converter {
-    fun convert(obj: Any): ResponseBody
 }
