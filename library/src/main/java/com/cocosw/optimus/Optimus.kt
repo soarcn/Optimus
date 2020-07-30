@@ -98,7 +98,11 @@ class OptimusHandler<T>(
                 throw IllegalStateException("can't find definition for method " + method.name)
             }
             val response = optimus.supplier.get(define.kClass, method)
-            val value: Any? = response.result?.invoke(DefinitionParameters(args))
+            val value: Any? = if (args!=null) {
+                response.result?.invoke(DefinitionParameters(*args))
+            } else {
+                response.result?.invoke(DefinitionParameters(args))
+            }
             val returning = if (response.code >= 400) {
                 Calls.response(
                     Response.error<T>(
@@ -113,7 +117,7 @@ class OptimusHandler<T>(
             if (args == null || args.isEmpty())
                 method.invoke(delegate.returning(returning))
             else {
-                method.invoke(delegate.returning(returning), args)
+                method.invoke(delegate.returning(returning), *args)
             }
         }
     }

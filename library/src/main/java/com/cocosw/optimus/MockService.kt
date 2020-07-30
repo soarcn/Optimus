@@ -36,29 +36,11 @@ class DefinitionParameters internal constructor(vararg val values: Any?) {
     operator fun <T> get(i: Int) = values[i] as T
 
     /**
-     * Number of contained elements
-     */
-    fun size() = values.size
-
-    /**
-     * Tells if it has no parameter
-     */
-    fun isEmpty() = size() == 0
-
-    /**
-     * Tells if it has parameters
-     */
-    fun isNotEmpty() = !isEmpty()
-
-    /**
      * Get first element of given type T
      * return T
      */
     inline fun <reified T> get() = values.first { it is T }
 
-    companion object {
-        const val MAX_PARAMS = 5
-    }
 }
 
 class MockDefinition(
