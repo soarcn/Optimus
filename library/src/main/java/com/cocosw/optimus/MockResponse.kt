@@ -24,4 +24,11 @@ fun <E> MockResponse.error(
     return Response<E>(name, code, result)
 }
 
+fun MockResponse.error(
+    name: String? = null,
+    code: Int = 400
+): Response<Nothing> {
+    return Response<Nothing>(name, code, null)
+}
+
 annotation class Default

@@ -3,6 +3,7 @@ package com.cocosw.optimus
 import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -19,6 +20,9 @@ interface TestApi {
     fun post(): Call<List<User>>
 
     fun new(): Completable
+
+    @GET("/call")
+    fun call(): Call<Response<User>>
 }
 
 interface AnotherApi {
@@ -39,6 +43,7 @@ class TestMockUser : MockResponse {
     val Happy = success { mockUser }
     val Another = success { mockUser(3) }
     val Empty = error { mockError }
+    val HTTP403 = error(code = 403)
 }
 
 class TestFindUser : MockResponse {
@@ -61,4 +66,4 @@ private fun mockUser(id: Int): User {
     return User(id, "test", "test", "test", "test")
 }
 
-class ApiError(statusCode: Int, error: String)
+class ApiError(val statusCode: Int, val error: String)

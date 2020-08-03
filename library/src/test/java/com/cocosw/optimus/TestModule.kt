@@ -41,6 +41,7 @@ internal val mock = alter(TestApi::class.java, "TestApi") {
     TestApi::get with TestMockUser::class named "Get user"
     TestApi::find with TestFindUser::class named "Find user"
     TestApi::post with TestMockUserList::class named "Get User List"
+    TestApi::call with TestMockUser::class
 }
 
 private fun mockwebserver(moshi: Moshi): MockWebServer {

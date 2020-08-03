@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import okhttp3.ResponseBody
 import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,19 +33,22 @@ class FirstFragment : Fragment() {
 
         view.findViewById<Button>(R.id.button_first).setOnClickListener {
 
-            api.login("","").enqueue(object : Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
+            api.login("", "").enqueue(object : Callback<Response<Void>> {
+                override fun onFailure(call: Call<Response<Void>>, t: Throwable) {
                 }
 
                 override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
+                    call: Call<Response<Void>>,
+                    response: Response<Response<Void>>
                 ) {
                     if (response.isSuccessful) {
                         findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
                     } else {
-                        Toast.makeText(requireContext(),response.message(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            response.errorBody()?.string(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             })

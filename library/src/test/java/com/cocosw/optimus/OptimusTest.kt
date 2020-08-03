@@ -85,4 +85,24 @@ class OptimusTest : KoinTest {
             optimus.create(TestApi::class.java).find(11).blockingGet()
         }
     }
+
+    @Test
+    fun testCall() {
+        val test = optimus.create(TestApi::class.java)
+        mockResponseSupplier.set(TestApi::call, TestMockUser::HTTP403)
+        var response = test.call().execute()
+        Assert.assertEquals(response.isSuccessful, false)
+        Assert.assertEquals(response.code(), 403)
+        Assert.assertEquals(response.body(), null)
+        Assert.assertEquals(response.errorBody()?.string(), "")
+        mockResponseSupplier.set(TestApi::call, TestMockUser::Empty)
+        response = test.call().execute()
+        Assert.assertEquals(response.isSuccessful, false)
+        Assert.assertEquals(response.code(), 400)
+        Assert.assertEquals(response.body(), null)
+        Assert.assertEquals(
+            response.errorBody()?.string(),
+            "{\"error\":\"error\",\"statusCode\":400}"
+        )
+    }
 }

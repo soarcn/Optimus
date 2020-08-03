@@ -6,15 +6,15 @@ import okhttp3.MediaType
 import okhttp3.ResponseBody
 
 interface Converter {
-    fun convert(obj: Any): ResponseBody
+    fun convert(obj: Any?): ResponseBody
 
     companion object {
         fun create(moshi: Moshi): Converter {
             return object : Converter {
-                override fun convert(obj: Any): ResponseBody {
+                override fun convert(obj: Any?): ResponseBody {
                     return ResponseBody.create(
                         MediaType.parse("application/json"),
-                        moshi.adapter(obj.javaClass).toJson(obj)
+                        if (obj != null) moshi.adapter(obj.javaClass).toJson(obj) else ""
                     )
                 }
             }
@@ -22,10 +22,10 @@ interface Converter {
 
         fun create(gson: Gson): Converter {
             return object : Converter {
-                override fun convert(obj: Any): ResponseBody {
+                override fun convert(obj: Any?): ResponseBody {
                     return ResponseBody.create(
                         MediaType.parse("application/json"),
-                        gson.toJson(obj)
+                        if (obj != null) gson.toJson(obj) else ""
                     )
                 }
             }
@@ -33,8 +33,8 @@ interface Converter {
 
         internal fun default(): Converter {
             return object : Converter {
-                override fun convert(obj: Any): ResponseBody {
-                    throw NotImplementedError()
+                override fun convert(obj: Any?): ResponseBody {
+                    throw NotImplementedError("converter is required")
                 }
             }
         }

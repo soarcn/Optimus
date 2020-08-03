@@ -1,11 +1,6 @@
 package com.cocosw.optimus
 
 import android.content.SharedPreferences
-import java.lang.reflect.InvocationHandler
-import java.lang.reflect.Method
-import java.lang.reflect.Proxy
-import java.util.concurrent.TimeUnit
-import kotlin.reflect.jvm.javaMethod
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -13,6 +8,11 @@ import retrofit2.mock.BehaviorDelegate
 import retrofit2.mock.Calls
 import retrofit2.mock.MockRetrofit
 import retrofit2.mock.NetworkBehavior
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Method
+import java.lang.reflect.Proxy
+import java.util.concurrent.TimeUnit
+import kotlin.reflect.jvm.javaMethod
 
 class Optimus internal constructor(
     internal val retrofit: MockRetrofit,
@@ -198,7 +198,7 @@ internal class OptimusHandler<T>(
                 Calls.response(
                     Response.error<T>(
                         response.code,
-                        optimus.converter.convert(value ?: "")
+                        optimus.converter.convert(value)
                     )
                 )
             } else {
