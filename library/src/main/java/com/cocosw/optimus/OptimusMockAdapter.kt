@@ -58,13 +58,13 @@ internal class OptimusMockAdapter(private val context: Context, private val opti
         view.findViewById<Spinner>(R.id.spinner).apply {
             val definition = optimus.response[p0].definitions[p1]
             adapter = MockBehaviorAdapter(context, definition)
-            setSelection(optimus.supplier.index(definition.kFunction,definition.kClass))
+            setSelection(optimus.supplier.index(definition.kFunction, definition.kClass))
 
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
 
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    optimus.supplier.select(p2,definition.kFunction,definition.kClass)
+                    optimus.supplier.select(p2, definition.kFunction, definition.kClass)
                 }
             }
         }

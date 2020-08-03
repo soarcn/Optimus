@@ -6,19 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-internal class EnumAdapter<T : Enum<T>> @JvmOverloads constructor(context: Context, enumType: Class<T>, private val showNull: Boolean = false) : BindableAdapter<T>(context) {
+internal class EnumAdapter<T : Enum<T>> @JvmOverloads constructor(
+    context: Context,
+    enumType: Class<T>,
+    private val showNull: Boolean = false
+) : BindableAdapter<T>(context) {
     private val enumConstants: Array<T>? = enumType.enumConstants
     private val nullOffset: Int = if (showNull) 1 else 0
 
     override fun getCount(): Int {
-        return enumConstants?.size?:0 + nullOffset
+        return enumConstants?.size ?: 0 + nullOffset
     }
 
     override fun getItem(position: Int): T? {
         return if (showNull && position == 0) {
             null
         } else enumConstants?.get(position - nullOffset)
-
     }
 
     override fun getItemId(position: Int): Long {
@@ -34,7 +37,11 @@ internal class EnumAdapter<T : Enum<T>> @JvmOverloads constructor(context: Conte
         tv?.text = getName(item)
     }
 
-    override fun newDropDownView(inflater: LayoutInflater, position: Int, container: ViewGroup): View? {
+    override fun newDropDownView(
+        inflater: LayoutInflater,
+        position: Int,
+        container: ViewGroup
+    ): View? {
         return inflater.inflate(android.R.layout.simple_spinner_dropdown_item, container, false)
     }
 

@@ -10,7 +10,7 @@ internal class NetworkDelayAdapter(context: Context) : BindableAdapter<Long>(con
 
     private val VALUES = longArrayOf(250, 500, 1000, 2000, 3000, 5000)
 
-    fun getPositionForValue(value: Long): Int {
+    fun getPosition(value: Long): Int {
         for (i in VALUES.indices) {
             if (VALUES[i] == value) {
                 return i
@@ -40,8 +40,11 @@ internal class NetworkDelayAdapter(context: Context) : BindableAdapter<Long>(con
         tv.text = item.toString() + "ms"
     }
 
-    override fun newDropDownView(inflater: LayoutInflater, position: Int, container: ViewGroup): View {
+    override fun newDropDownView(
+        inflater: LayoutInflater,
+        position: Int,
+        container: ViewGroup
+    ): View {
         return inflater.inflate(android.R.layout.simple_spinner_dropdown_item, container, false)
     }
-
 }

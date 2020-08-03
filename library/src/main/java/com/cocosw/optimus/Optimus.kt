@@ -1,6 +1,11 @@
 package com.cocosw.optimus
 
 import android.content.SharedPreferences
+import java.lang.reflect.InvocationHandler
+import java.lang.reflect.Method
+import java.lang.reflect.Proxy
+import java.util.concurrent.TimeUnit
+import kotlin.reflect.jvm.javaMethod
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -8,11 +13,6 @@ import retrofit2.mock.BehaviorDelegate
 import retrofit2.mock.Calls
 import retrofit2.mock.MockRetrofit
 import retrofit2.mock.NetworkBehavior
-import java.lang.reflect.InvocationHandler
-import java.lang.reflect.Method
-import java.lang.reflect.Proxy
-import java.util.concurrent.TimeUnit
-import kotlin.reflect.jvm.javaMethod
 
 class Optimus internal constructor(
     internal val retrofit: MockRetrofit,
@@ -59,7 +59,7 @@ class Optimus internal constructor(
             if (retrofit != null) {
                 throw IllegalStateException("redundant retrofit/mock retrofit instance")
             }
-            this.networkBehavior = OptimusNetworkBehavior(null,mockRetrofit.networkBehavior())
+            this.networkBehavior = OptimusNetworkBehavior(null, mockRetrofit.networkBehavior())
             retrofit = mockRetrofit
             return this
         }
@@ -107,18 +107,23 @@ internal class OptimusNetworkBehavior(
 
     init {
         sharedPreferences?.apply {
-            networkBehavior.setDelay(this.getLong(delay,0),TimeUnit.MILLISECONDS)
-            networkBehavior.setVariancePercent(this.getInt(variancePercent,0))
-            networkBehavior.setFailurePercent(this.getInt(failurePercent,0))
-            networkBehavior.setErrorPercent(this.getInt(errorPercent,0))
-            networkBehavior.setErrorFactory { Response.error<Any>(this.getInt(error,404), ResponseBody.create(null, ByteArray(0))) }
+            networkBehavior.setDelay(this.getLong(delay, 0), TimeUnit.MILLISECONDS)
+            networkBehavior.setVariancePercent(this.getInt(variancePercent, 0))
+            networkBehavior.setFailurePercent(this.getInt(failurePercent, 0))
+            networkBehavior.setErrorPercent(this.getInt(errorPercent, 0))
+            networkBehavior.setErrorFactory {
+                Response.error<Any>(
+                    this.getInt(error, 404),
+                    ResponseBody.create(null, ByteArray(0))
+                )
+            }
         }
     }
 
     fun setDelay(amount: Long, unit: TimeUnit) {
         networkBehavior.setDelay(amount, unit)
         sharedPreferences?.edit()?.run {
-            this.putLong(delay,amount)
+            this.putLong(delay, amount)
             commit()
         }
     }
@@ -127,7 +132,7 @@ internal class OptimusNetworkBehavior(
     fun setVariancePercent(variancePercent: Int) {
         networkBehavior.setVariancePercent(variancePercent)
         sharedPreferences?.edit()?.run {
-            this.putInt(this@OptimusNetworkBehavior.variancePercent,variancePercent)
+            this.putInt(this@OptimusNetworkBehavior.variancePercent, variancePercent)
             commit()
         }
     }
@@ -136,31 +141,30 @@ internal class OptimusNetworkBehavior(
     fun setFailurePercent(failurePercent: Int) {
         networkBehavior.setFailurePercent(failurePercent)
         sharedPreferences?.edit()?.run {
-            this.putInt(this@OptimusNetworkBehavior.failurePercent,failurePercent)
+            this.putInt(this@OptimusNetworkBehavior.failurePercent, failurePercent)
             commit()
         }
     }
 
     fun setErrorCode(errorCode: Int) {
         sharedPreferences?.edit()?.run {
-            this.putInt(error,errorCode)
+            this.putInt(error, errorCode)
             commit()
         }
     }
 
-    fun getErrorCode():Int? {
-        return sharedPreferences?.getInt(error,404)
+    fun getErrorCode(): Int? {
+        return sharedPreferences?.getInt(error, 404)
     }
 
     /** Set the percentage of calls to [.calculateIsError] that return `true`.  */
     fun setErrorPercent(errorPercent: Int) {
         networkBehavior.setErrorPercent(errorPercent)
         sharedPreferences?.edit()?.run {
-            this.putInt(this@OptimusNetworkBehavior.errorPercent,errorPercent)
+            this.putInt(this@OptimusNetworkBehavior.errorPercent, errorPercent)
             commit()
         }
     }
-
 }
 
 internal class OptimusHandler<T>(

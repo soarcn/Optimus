@@ -10,8 +10,6 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.mock.MockRetrofit
 
 class Startup {
     fun init(application: App) {
@@ -26,18 +24,15 @@ class Startup {
     }
 
     fun debugModule(): Module {
-        return module {
-            single { MockResponseSupplier.create(androidApplication().getSharedPreferences("demo",MODE_PRIVATE)) }
-            single { Optimus.Builder(get()).retrofit(get(),androidApplication().getSharedPreferences("demo",MODE_PRIVATE)).mockGraph(mockApi).build() }
+        return module(override = true) {
+            single { MockResponseSupplier.create(androidApplication().getSharedPreferences("demo", MODE_PRIVATE)) }
+            single { Optimus.Builder(get()).retrofit(get(), androidApplication().getSharedPreferences("demo", MODE_PRIVATE)).mockGraph(mockApi).build() }
             single { Moshi.Builder().build() }
+            single { provideMockApi(get()) }
         }
     }
 
     private fun provideMockApi(optimus: Optimus): Api {
         return optimus.create(Api::class.java)
-    }
-
-    private fun provideMockRetrofit(retrofit: Retrofit): MockRetrofit {
-        return MockRetrofit.Builder(retrofit).build()
     }
 }

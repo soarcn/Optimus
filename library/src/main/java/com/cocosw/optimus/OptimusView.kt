@@ -12,7 +12,9 @@ import android.widget.Spinner
 import java.util.concurrent.TimeUnit
 
 class OptimusView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private lateinit var listview: ExpandableListView
     private lateinit var optimus: Optimus
@@ -27,7 +29,7 @@ class OptimusView @JvmOverloads constructor(
         findViewById<Spinner>(R.id.debug_network_delay).apply {
             val delayAdapter = NetworkDelayAdapter(context)
             adapter = delayAdapter
-            setSelection(delayAdapter.getPositionForValue(behavior.networkBehavior.delay(TimeUnit.MILLISECONDS)))
+            setSelection(delayAdapter.getPosition(behavior.networkBehavior.delay(TimeUnit.MILLISECONDS)))
 
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -84,7 +86,8 @@ class OptimusView @JvmOverloads constructor(
                 val delayAdapter = EnumAdapter(context, NetworkErrorCode::class.java)
                 adapter = delayAdapter
                 setSelection(
-                    NetworkErrorCode.values().indexOfFirst { it.code == behavior.getErrorCode() })
+                    NetworkErrorCode.values().indexOfFirst { it.code == behavior.getErrorCode() }
+                )
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(p0: AdapterView<*>?) {}
 

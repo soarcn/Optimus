@@ -1,7 +1,6 @@
 package com.cocosw.optimus
 
-class InMemoryMockResponseSupplier : MockResponseSupplier() {
-    val map: HashMap<String, String> = HashMap()
+internal class InMemoryMockResponseSupplier(private val map: HashMap<String, String> = HashMap()) : MockResponseSupplier() {
 
     override fun save(key: String, value: String) {
         map[key] = value
@@ -9,9 +8,5 @@ class InMemoryMockResponseSupplier : MockResponseSupplier() {
 
     override fun load(key: String): String? {
         return map[key]
-    }
-
-    fun reset() {
-        map.clear()
     }
 }

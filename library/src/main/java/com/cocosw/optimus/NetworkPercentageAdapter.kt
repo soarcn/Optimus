@@ -44,7 +44,11 @@ internal class NetworkPercentageAdapter(context: Context) : BindableAdapter<Int>
         }
     }
 
-    override fun newDropDownView(inflater: LayoutInflater, position: Int, container: ViewGroup): View {
+    override fun newDropDownView(
+        inflater: LayoutInflater,
+        position: Int,
+        container: ViewGroup
+    ): View {
         return inflater.inflate(android.R.layout.simple_spinner_dropdown_item, container, false)
     }
 }

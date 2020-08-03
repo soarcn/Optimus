@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 
 /** An implementation of [BaseAdapter] which uses the new/bind pattern for its views.  */
-abstract internal class BindableAdapter<T>(val context: Context) : BaseAdapter() {
+internal abstract class BindableAdapter<T>(val context: Context) : BaseAdapter() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     abstract override fun getItem(position: Int): T?
