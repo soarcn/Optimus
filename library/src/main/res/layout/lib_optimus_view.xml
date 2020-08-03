@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="400dp"
+    android:orientation="vertical"
+    android:background="@android:color/background_light">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/group"
+        android:gravity="center">
+
+        <RadioButton
+            android:id="@+id/tab1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Behaviors"
+            style="@style/Optimus.Tab"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/tab2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/Optimus.Tab"
+            android:text="Network" />
+
+        <Switch
+            android:gravity="center"
+            android:id="@+id/bypass"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Bypass" />
+    </RadioGroup>
+
+    <ExpandableListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <GridLayout
+        android:padding="12dp"
+        android:visibility="gone"
+        android:id="@+id/network"
+        android:columnCount="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            style="@style/Optimus.RowTitle"
+            android:layout_gravity="start|center_vertical"
+            android:text="Delay" />
+
+        <Spinner
+            android:id="@+id/debug_network_delay"
+            android:layout_width="0dp"
+            android:layout_gravity="start|center_vertical|fill_horizontal" />
+
+        <TextView
+            style="@style/Optimus.RowTitle"
+            android:layout_gravity="start|center_vertical"
+            android:text="Variance" />
+
+        <Spinner
+            android:id="@+id/debug_network_variance"
+            android:layout_width="0dp"
+            android:layout_gravity="start|center_vertical|fill_horizontal" />
+
+        <TextView
+            style="@style/Optimus.RowTitle"
+            android:layout_gravity="start|center_vertical"
+            android:text="Failure" />
+
+        <Spinner
+            android:id="@+id/debug_network_failure"
+            android:layout_width="0dp"
+            android:layout_gravity="start|center_vertical|fill_horizontal" />
+
+        <TextView
+            style="@style/Optimus.RowTitle"
+            android:layout_gravity="start|center_vertical"
+            android:text="Error" />
+
+        <Spinner
+            android:id="@+id/debug_network_error"
+            android:layout_width="0dp"
+            android:layout_gravity="start|center_vertical|fill_horizontal" />
+
+        <Space
+            style="@style/Optimus.RowTitle"
+            android:layout_gravity="start|center_vertical" />
+
+        <Spinner
+            android:id="@+id/debug_network_error_code"
+            android:layout_width="0dp"
+            android:layout_gravity="start|center_vertical|fill_horizontal" />
+    </GridLayout>
+
+</LinearLayout>

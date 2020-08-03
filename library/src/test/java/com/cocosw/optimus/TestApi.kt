@@ -38,19 +38,19 @@ class TestMockUser : MockResponse {
     @Default
     val Happy = success { mockUser }
     val Another = success { mockUser(3) }
-    val Empty = notfound { mockError }
+    val Empty = error { mockError }
 }
 
 class TestFindUser : MockResponse {
     @Default
     val User = success { (id: Int) -> mockUser(id) }
-    val Empty = notfound { mockError }
+    val Empty = error { mockError }
 }
 
 class TestMockUserList : MockResponse {
     @Default
     val Happy = success { listOf(mockUser) }
-    val Empty = notfound { mockError }
+    val Empty = error { mockError }
 }
 
 val mockUser = User(1, "test", "test", "test", "test")

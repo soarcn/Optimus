@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Optimus"/>
+
+    <style name="Optimus.Tab">
+        <item name="android:background">@drawable/tab_selector</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Optimus.Header">
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+    </style>
+
+    <style name="Optimus.RowWidget">
+        <item name="android:minHeight">30dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+    </style>
+
+    <style name="Optimus.RowTitle" parent="Optimus.RowWidget">
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Optimus.RowValue" parent="Optimus.RowWidget">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+</resources>

@@ -1,6 +1,10 @@
 package com.cocosw.optimus.app
 
+import android.content.Context.MODE_PRIVATE
+import com.cocosw.optimus.MockResponseSupplier
 import com.cocosw.optimus.Optimus
+import com.squareup.moshi.Moshi
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -23,9 +27,9 @@ class Startup {
 
     fun debugModule(): Module {
         return module {
-            single { provideMockRetrofit(get()) }
-            single { Optimus.Builder(get()).build() }
-            single { provideMockApi(get()) }
+            single { MockResponseSupplier.create(androidApplication().getSharedPreferences("demo",MODE_PRIVATE)) }
+            single { Optimus.Builder(get()).retrofit(get(),androidApplication().getSharedPreferences("demo",MODE_PRIVATE)).mockGraph(mockApi).build() }
+            single { Moshi.Builder().build() }
         }
     }
 

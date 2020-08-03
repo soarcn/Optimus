@@ -3,21 +3,25 @@ package com.cocosw.optimus.app
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.cocosw.optimus.Optimus
+import com.cocosw.optimus.OptimusView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
+
+    val opti:Optimus by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+        AlertDialog.Builder(this)
+            .setView(OptimusView(this).apply { this.setOptimus(opti) })
+            .create().show()
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

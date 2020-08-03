@@ -16,9 +16,9 @@ fun <E> MockResponse.success(
     return Response<E>(name, code, result)
 }
 
-fun <E> MockResponse.notfound(
+fun <E> MockResponse.error(
     name: String? = null,
-    code: Int = 404,
+    code: Int = 400,
     result: ((DefinitionParameters) -> E)? = null
 ): Response<E> {
     return Response<E>(name, code, result)
