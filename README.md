@@ -1,5 +1,6 @@
 Optimus
 ============
+![Maven](https://maven-badges.herokuapp.com/maven-central/com.cocosw/optimus/badge.png?style=plastic)
 
 Optimus is a dynamic mock tool for retrofit
 
@@ -80,3 +81,8 @@ Step2 Change mock response with Api
         assert(api.login().response.code,401)
 ```
 
+Download
+=====
+```groovy
+    implementation 'com.cocosw:optimus:1.0.0'
+```
