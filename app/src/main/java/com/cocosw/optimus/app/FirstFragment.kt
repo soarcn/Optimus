@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,7 +18,7 @@ import retrofit2.Response
  */
 class FirstFragment : Fragment() {
 
-    private val api:Api by inject()
+    private val api: Api by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,21 +33,22 @@ class FirstFragment : Fragment() {
 
         view.findViewById<Button>(R.id.button_first).setOnClickListener {
 
-            api.login("", "").enqueue(object : Callback<Response<Void>> {
-                override fun onFailure(call: Call<Response<Void>>, t: Throwable) {
+            api.login().enqueue(object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Snackbar.make(view, t.message ?: "", Snackbar.LENGTH_SHORT).show()
                 }
 
                 override fun onResponse(
-                    call: Call<Response<Void>>,
-                    response: Response<Response<Void>>
+                    call: Call<Void>,
+                    response: Response<Void>
                 ) {
                     if (response.isSuccessful) {
                         findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            response.errorBody()?.string(),
-                            Toast.LENGTH_SHORT
+                        Snackbar.make(
+                            view,
+                            response.errorBody()?.string() ?: "",
+                            Snackbar.LENGTH_LONG
                         ).show()
                     }
                 }
