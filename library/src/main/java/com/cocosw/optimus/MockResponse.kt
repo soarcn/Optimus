@@ -17,16 +17,16 @@ fun <E> MockResponse.success(
 }
 
 fun <E> MockResponse.error(
-    name: String? = null,
     code: Int = 400,
+    name: String? = null,
     result: ((DefinitionParameters) -> E)? = null
 ): Response<E> {
     return Response<E>(name, code, result)
 }
 
 fun MockResponse.error(
-    name: String? = null,
-    code: Int = 400
+    code: Int = 400,
+    name: String? = null
 ): Response<Nothing> {
     return Response<Nothing>(name, code, null)
 }
