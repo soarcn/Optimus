@@ -10,7 +10,7 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
-    val opti:Optimus by inject()
+    val optimus: Optimus by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
         findViewById<View>(R.id.fab).setOnClickListener {
             AlertDialog.Builder(this)
-                .setView(OptimusView(this).apply { this.setOptimus(opti) })
+                .setView(OptimusView(this).apply { this.setOptimus(optimus) })
                 .create().show()
         }
     }
