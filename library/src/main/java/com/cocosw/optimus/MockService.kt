@@ -3,7 +3,7 @@ package com.cocosw.optimus
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
-abstract class MockService(
+abstract class MockService internal constructor(
     val clazz: Class<*>,
     val name: String
 ) {
@@ -19,7 +19,7 @@ abstract class MockService(
     }
 }
 
-inline fun <T> alter(
+fun <T> alter(
     clazz: Class<T>,
     name: String = clazz.simpleName,
     block: MockService.() -> Unit
