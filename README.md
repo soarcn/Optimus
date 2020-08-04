@@ -9,7 +9,7 @@ Optimus is a dynamic mock tool for retrofit
 Usage
 =======
 
-Given you have a service interface like this
+Given you have a service interface
 
 ```kotlin
 interface Api {
@@ -19,7 +19,6 @@ interface Api {
 ```
 
 Step 1 Define mock data
-------
 
 ```kotlin
 class MockUser : MockResponse {
@@ -30,7 +29,6 @@ class MockUser : MockResponse {
 ```
 
 Step 2 Create an optimus instance
--------
 
 ```kotlin
 val supplier = MockResponseSupplier.create(sharedpreference)
@@ -45,7 +43,6 @@ Optimus.Builder(supplier)
 ```
 
 Step 3 Replace retrofit with optimus
--------
 
 ```kotlin
 optimus.create(Api::class.java)
@@ -54,9 +51,9 @@ optimus.create(Api::class.java)
 Optimus provides a view to change mock behavior in runtime, You may use it in a Alert like this
 
 ```kotlin
-            AlertDialog.Builder(this)
-                .setView(OptimusView(this).apply { this.setOptimus(optimus) })
-                .create().show()
+AlertDialog.Builder(this)
+           .setView(OptimusView(this).apply { this.setOptimus(optimus) })
+           .create().show()
 ```
 
 Testing
@@ -65,7 +62,7 @@ Testing
 Optimus makes unittest and UI test easier.
 
 Step1 User InMemory MockResponseSupplier and mockretrofit
-----------
+
 ```kotlin
 val supplier = MockResponseSupplier.memory()
 
