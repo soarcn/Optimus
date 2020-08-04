@@ -23,6 +23,9 @@ class OptimusView @JvmOverloads constructor(
         this.optimus = optimus
         listview = findViewById(R.id.list)
         listview.setAdapter(OptimusMockAdapter(context, optimus))
+        if (optimus.response.size == 1) {
+            listview.expandGroup(0)
+        }
 
         val behavior = optimus.networkBehavior
 
@@ -35,7 +38,7 @@ class OptimusView @JvmOverloads constructor(
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
 
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    behavior.setDelay(delayAdapter.getItem(p2), TimeUnit.MICROSECONDS)
+                    behavior.setDelay(delayAdapter.getItem(p2), TimeUnit.MILLISECONDS)
                 }
             }
         }
