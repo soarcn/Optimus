@@ -9,6 +9,7 @@ import android.widget.ExpandableListView
 import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.Spinner
+import android.widget.Switch
 import java.util.concurrent.TimeUnit
 
 class OptimusView @JvmOverloads constructor(
@@ -25,6 +26,13 @@ class OptimusView @JvmOverloads constructor(
         listview.setAdapter(OptimusMockAdapter(context, optimus))
         if (optimus.response.size == 1) {
             listview.expandGroup(0)
+        }
+
+        findViewById<Switch>(R.id.bypass).apply {
+            this.isChecked = optimus.bypass
+            setOnCheckedChangeListener { _, b ->
+                optimus.bypass = b
+            }
         }
 
         val behavior = optimus.networkBehavior
