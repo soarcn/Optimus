@@ -8,7 +8,7 @@ class MockDefinitionTest {
     @Test
     fun testInstance() {
         assertThat(mock.name).isEqualTo("TestApi")
-        assertThat(mock.definitions).hasSize(3)
+        assertThat(mock.definitions).hasSize(4)
         assertThat(mock.definitions[0].name).isEqualTo("Get user")
         assertThat(mock.definitions[1].name).isEqualTo("Find user")
         assertThat(mock.definitions[2].name).isEqualTo("Get User List")
